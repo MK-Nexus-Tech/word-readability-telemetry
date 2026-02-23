@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word & Readability</title>
+    <!-- Inter & JetBrains Mono · free fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* ---------- WORD & READABILITY · TELEMETRY ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --base: #030508;
+            --signal: #00f2ff;
+            --accent: #7000ff;
+            --success: #50FFB1;
+            --glass-bg: rgba(0, 242, 255, 0.03);
+            --glass-border: rgba(0, 242, 255, 0.15);
+            --text-primary: #e0f0ff;
+            --text-secondary: #96b8d8;
+            --scanline: rgba(0, 242, 255, 0.02);
+            --glow: 0 0 12px rgba(0, 242, 255, 0.3);
+            --glow-accent: 0 0 16px rgba(112, 0, 255, 0.4);
+            --card-bg: rgba(3, 5, 8, 0.7);
+            --border-glow: 1px solid rgba(0, 242, 255, 0.2);
+            --border-accent: 1px solid rgba(112, 0, 255, 0.4);
+        }
+
+        body {
+            background-color: var(--base);
+            background-image: 
+                linear-gradient(0deg, var(--scanline) 1px, transparent 1px),
+                linear-gradient(90deg, var(--scanline) 1px, transparent 1px);
+            background-size: 40px 40px;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding: 24px 20px;
+            position: relative;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border: var(--border-glow);
+            box-shadow: var(--glow), inset 0 0 20px rgba(0, 242, 255, 0.05);
+            border-radius: 28px;
+            padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 1360px;
+            margin: 0 auto;
+        }
+
+        /* header with logo & dev info */
+        .header-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            gap: 20px;
+        }
+
+        .brand-block {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 2px solid var(--signal);
+            box-shadow: var(--glow), 0 0 0 2px rgba(112, 0, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 4px;
+        }
+
+        .logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            border-radius: 50%;
+        }
+
+        .title-glow h1 {
+            font-weight: 600;
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #fff 0%, var(--signal) 80%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 12px var(--signal);
+        }
+
+        .title-glow p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .developer-area {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .linkedin-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(112, 0, 255, 0.15);
+            border: 1px solid var(--accent);
+            border-radius: 60px;
+            padding: 10px 22px;
+            font-weight: 500;
+            color: white;
+            text-decoration: none;
+            backdrop-filter: blur(8px);
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+            box-shadow: 0 0 20px rgba(112, 0, 255, 0.3);
+            transition: all 0.2s;
+        }
+
+        .linkedin-cta:hover {
+            background: var(--accent);
+            border-color: var(--signal);
+            box-shadow: 0 0 28px var(--accent), 0 0 28px var(--signal);
+            transform: scale(1.02);
+        }
+
+        .linkedin-cta svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .copyright {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border-left: 2px solid var(--signal);
+            padding-left: 20px;
+        }
+
+        .copyright .dev-name {
+            color: var(--signal);
+            font-weight: 600;
+        }
+
+        /* main tool grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        @media (max-width: 760px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .textarea-wrap {
+            position: relative;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 320px;
+            background: rgba(0, 242, 255, 0.02);
+            border: var(--border-glow);
+            border-radius: 28px;
+            padding: 20px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            resize: vertical;
+            backdrop-filter: blur(8px);
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,242,255,0.1);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--signal);
+            box-shadow: 0 0 0 3px rgba(0, 242, 255, 0.2), inset 0 0 20px rgba(0,242,255,0.1);
+        }
+
+        .char-float {
+            position: absolute;
+            bottom: 16px;
+            right: 24px;
+            background: rgba(3,5,8,0.7);
+            backdrop-filter: blur(6px);
+            border: 1px solid var(--signal);
+            border-radius: 40px;
+            padding: 4px 18px;
+            font-size: 0.85rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--signal);
+            box-shadow: var(--glow);
+        }
+
+        .action-row {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn {
+            flex: 1;
+            background: rgba(112, 0, 255, 0.2);
+            border: var(--border-accent);
+            color: white;
+            font-weight: 600;
+            padding: 14px 10px;
+            border-radius: 40px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            backdrop-filter: blur(8px);
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 0 12px rgba(112,0,255,0.2);
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: rgba(0, 242, 255, 0.1);
+            border-color: var(--signal);
+            box-shadow: 0 0 20px rgba(0,242,255,0.2);
+        }
+
+        .btn-primary:hover {
+            background: rgba(0, 242, 255, 0.25);
+            border-color: var(--signal);
+            box-shadow: 0 0 30px var(--signal);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(112, 0, 255, 0.4);
+            border-color: var(--accent);
+            box-shadow: 0 0 24px var(--accent);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .metric-tile {
+            background: rgba(3,5,8,0.5);
+            border: var(--border-glow);
+            border-radius: 24px;
+            padding: 18px 12px;
+            backdrop-filter: blur(4px);
+            box-shadow: inset 0 0 15px rgba(0,242,255,0.05);
+        }
+
+        .metric-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.1rem;
+            font-weight: 600;
+            color: var(--signal);
+            line-height: 1.2;
+            text-shadow: 0 0 8px var(--signal);
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 4px 6px 0;
+            color: var(--signal);
+            font-weight: 400;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        td {
+            padding: 8px 4px 8px 0;
+            border-bottom: 1px solid rgba(0,242,255,0.1);
+        }
+
+        .share-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .share-btn {
+            background: rgba(0,242,255,0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            padding: 10px 6px;
+            font-size: 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .share-btn:hover {
+            border-color: var(--signal);
+            color: var(--signal);
+            box-shadow: 0 0 12px var(--signal);
+        }
+
+        /* theme toggle fixed */
+        .theme-toggle-fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+            background: rgba(0,242,255,0.1);
+            border: 1px solid var(--signal);
+            border-radius: 50px;
+            padding: 10px 20px;
+            color: white;
+            backdrop-filter: blur(6px);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.2s;
+            box-shadow: var(--glow);
+        }
+        .theme-toggle-fab:hover {
+            background: var(--signal);
+            color: var(--base);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- header with logo, developer, CTA, copyright -->
+        <div class="header-row">
+            <div class="brand-block">
+                <!-- logo in circle path (public/logo.webp) -->
+                <div class="logo-circle">
+                    <img src="public/logo.webp" alt="Word & Readability logo" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2245%22%20fill%3D%22%2300f2ff%22%20%2F%3E%3Ctext%20x%3D%2220%22%20y%3D%2268%22%20font-size%3D%2248%22%20fill%3D%22%23030508%22%3EW%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                </div>
+                <div class="title-glow">
+                    <h1>WORD & READABILITY TELEMETRY</h1>
+                </div>
+            </div>
+            <div class="developer-area">
+                <!-- beautiful CTA button -->
+                <a href="https://www.linkedin.com/in/muhammad-mk-nexus" target="_blank" class="linkedin-cta">
+                    <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    <span>Muhammad MK Nexus</span>
+                </a>
+                <div class="copyright">
+                    <span class="dev-name">Muhammad Maqsood</span> © 2026<br>
+                    all rights reserved
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN TOOL (all features working) -->
+        <div class="dashboard-grid">
+            <!-- left: input -->
+            <div class="input-panel glass-panel">
+                <div class="textarea-wrap">
+                    <textarea id="text-input" placeholder="// paste or type your text"></textarea>
+                    <div id="char-count" class="char-float">0 characters</div>
+                </div>
+                <div class="action-row">
+                    <button id="analyze-btn" class="btn btn-primary">▶ ANALYZE</button>
+                    <button id="reset-btn" class="btn btn-secondary">✕ RESET</button>
+                </div>
+            </div>
+
+            <!-- right: metrics & sharing -->
+            <div class="glass-panel" style="display: flex; flex-direction: column; gap: 1rem;">
+                <div class="metrics-grid" id="details-container">
+                    <div class="metric-tile"><span id="words" class="metric-value">—</span><div class="metric-label">WORDS</div></div>
+                    <div class="metric-tile"><span id="characters" class="metric-value">—</span><div class="metric-label">CHARS</div></div>
+                    <div class="metric-tile"><span id="sentences" class="metric-value">—</span><div class="metric-label">SENTENCES</div></div>
+                    <div class="metric-tile"><span id="paragraphs" class="metric-value">—</span><div class="metric-label">PARAGRAPHS</div></div>
+                    <div class="metric-tile"><span id="grade-level" class="metric-value">—</span><div class="metric-label">GRADE</div></div>
+                    <div class="metric-tile"><span id="reading-time" class="metric-value">—</span><div class="metric-label">READ (sec)</div></div>
+                    <div class="metric-tile"><span id="speaking-time" class="metric-value">—</span><div class="metric-label">SPEAK (sec)</div></div>
+                    <div class="metric-tile"><span class="metric-value" style="font-size:1.4rem;">⚡</span><div class="metric-label">LIVE</div></div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead><tr><th>KEYWORD</th><th>COUNT</th><th>%</th></tr></thead>
+                        <tbody id="keyword-table-body"></tbody>
+                    </table>
+                </div>
+
+                <div class="share-grid">
+                    <button id="copy-link" class="share-btn">🔗 LINK</button>
+                    <button id="copy-results" class="share-btn">📋 RESULTS</button>
+                    <button id="share-linkedin" class="share-btn">IN</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- theme toggle (floating) -->
+    <button class="theme-toggle-fab" id="themeToggle">🌙</button>
+
+    <script>
+        (function() {
+            // --- FULLY FUNCTIONAL TOOL (all features intact) ---
+            const textarea = document.getElementById('text-input');
+            const charSpan = document.getElementById('char-count');
+            const analyzeBtn = document.getElementById('analyze-btn');
+            const resetBtn = document.getElementById('reset-btn');
+
+            const wordsEl = document.getElementById('words');
+            const charactersEl = document.getElementById('characters');
+            const sentencesEl = document.getElementById('sentences');
+            const paragraphsEl = document.getElementById('paragraphs');
+            const gradeLevelEl = document.getElementById('grade-level');
+            const readingTimeEl = document.getElementById('reading-time');
+            const speakingTimeEl = document.getElementById('speaking-time');
+            const keywordBody = document.getElementById('keyword-table-body');
+
+            const copyLinkBtn = document.getElementById('copy-link');
+            const copyResultsBtn = document.getElementById('copy-results');
+            const twitterBtn = document.getElementById('share-twitter');
+            const facebookBtn = document.getElementById('share-facebook');
+            const linkedinBtn = document.getElementById('share-linkedin');
+            const whatsappBtn = document.getElementById('share-whatsapp');
+            const themeToggle = document.getElementById('themeToggle');
+
+            const KEYWORDS = ['words', 'word', 'text', 'help', 'writing', 'count', 'make', 'keywords', 'characters', 'online'];
+            const READING_SPEED = 200; const SPEAKING_SPEED = 130;
+
+            let debounceTimer;
+            let darkMode = false;
+
+            // Theme toggle functionality
+            themeToggle.addEventListener('click', () => {
+                const root = document.documentElement;
+                if (!darkMode) {
+                    root.style.setProperty('--base', '#1a1d2b');
+                    root.style.setProperty('--signal', '#ffb86b');
+                    root.style.setProperty('--text-primary', '#f8f8f2');
+                    themeToggle.textContent = '☀️';
+                } else {
+                    root.style.setProperty('--base', '#030508');
+                    root.style.setProperty('--signal', '#00f2ff');
+                    root.style.setProperty('--text-primary', '#e0f0ff');
+                    themeToggle.textContent = '🌙';
+                }
+                darkMode = !darkMode;
+            });
+
+            function updateCharCount() {
+                const c = textarea.value.length;
+                charSpan.textContent = `${c} character${c !== 1 ? 's' : ''}`;
+            }
+
+            function countWords(t) { let m = t.match(/[A-Za-z0-9'’-]+/g); return m ? m.length : 0; }
+            function countCharacters(t) { return t.length; }
+            function countSentences(t) { if (!t.trim()) return 0; let m = t.match(/[^.!?]+[.!?]+(\s|$)/g); return m ? m.length : (t.trim() ? 1 : 0); }
+            function countParagraphs(t) { if (!t.trim()) return 0; let p = t.split(/\n\s*\n/); return p.filter(pa => pa.trim().length > 0).length; }
+            function estimateSyllables(w) {
+                w = w.toLowerCase(); let vowel = w.match(/[aeiouy]+/g); if (!vowel) return 1; let c = vowel.length; if (w.endsWith('e') && !w.endsWith('le') && c > 1) c--; return Math.max(c, 1);
+            }
+            function syllablesInText(t) { let words = t.match(/[A-Za-z'’-]+/g) || []; return words.reduce((acc, w) => acc + estimateSyllables(w), 0); }
+            function calculateGradeLevel(t, w, s) { if (w === 0 || s === 0) return null; let syl = syllablesInText(t); let grade = 0.39 * (w / s) + 11.8 * (syl / w) - 15.59; return Math.max(grade, 0); }
+            function calculateTime(w, speed) { return Math.ceil(w / (speed / 60)); }
+            function keywordDensity(t, totalWords) { let d = {}; let words = t.toLowerCase().match(/[A-Za-z0-9'’-]+/g) || []; KEYWORDS.forEach(k => { let regex = new RegExp(`\\b${k}\\b`, 'gi'); let m = t.match(regex); d[k] = m ? m.length : 0; }); return d; }
+
+            function resetResults() {
+                wordsEl.textContent = charactersEl.textContent = sentencesEl.textContent = paragraphsEl.textContent = gradeLevelEl.textContent = readingTimeEl.textContent = speakingTimeEl.textContent = '—';
+                keywordBody.innerHTML = '';
+            }
+
+            function analyzeText() {
+                let text = textarea.value;
+                if (!text.trim()) { resetResults(); updateCharCount(); return; }
+                let words = countWords(text), chars = countCharacters(text), sentences = countSentences(text), paras = countParagraphs(text);
+                let grade = calculateGradeLevel(text, words, sentences);
+                let readTime = calculateTime(words, READING_SPEED), speakTime = calculateTime(words, SPEAKING_SPEED);
+                let density = keywordDensity(text, words);
+
+                wordsEl.textContent = words; charactersEl.textContent = chars; sentencesEl.textContent = sentences; paragraphsEl.textContent = paras;
+                gradeLevelEl.textContent = grade !== null ? grade.toFixed(1) : '—';
+                readingTimeEl.textContent = readTime; speakingTimeEl.textContent = speakTime;
+
+                keywordBody.innerHTML = '';
+                KEYWORDS.forEach(k => {
+                    let cnt = density[k] || 0, perc = words > 0 ? (cnt / words * 100).toFixed(1) : '0.0';
+                    let row = document.createElement('tr');
+                    row.innerHTML = `<td>${k}</td><td>${cnt}</td><td>${perc}%</td>`;
+                    keywordBody.appendChild(row);
+                });
+            }
+
+            function resetApp() { textarea.value = ''; resetResults(); updateCharCount(); window.location.hash = ''; }
+
+            function getEncodedUrl() { let t = textarea.value; if (!t) return null; return `${window.location.origin}${window.location.pathname}#t=${encodeURIComponent(t)}`; }
+            
+            copyLinkBtn.addEventListener('click', () => { let url = getEncodedUrl(); if (url) navigator.clipboard.writeText(url).then(() => alert('Link copied')); else alert('no text'); });
+            
+            copyResultsBtn.addEventListener('click', () => {
+                let t = textarea.value; if (!t) return; 
+                let w = countWords(t), ch = countCharacters(t), sen = countSentences(t), para = countParagraphs(t), 
+                    grade = calculateGradeLevel(t, w, sen), rd = calculateTime(w, READING_SPEED), sp = calculateTime(w, SPEAKING_SPEED); 
+                let dens = keywordDensity(t, w); 
+                let str = `WORD ANALYSIS\nwords:${w}\nchars:${ch}\nsentences:${sen}\nparagraphs:${para}\ngrade:${grade ? grade.toFixed(1) : 'N/A'}\nread:${rd}s\nspeak:${sp}s\n\nkeywords:\n`; 
+                KEYWORDS.forEach(k => { str += `${k}:${dens[k] || 0} (${w > 0 ? ((dens[k] / w) * 100).toFixed(1) : 0}%)\n`; }); 
+                navigator.clipboard.writeText(str).then(() => alert('Results copied'));
+            });
+            
+            linkedinBtn.addEventListener('click', () => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`));
+
+            // Load from URL hash if present
+            if (window.location.hash) {
+                let h = window.location.hash.substring(1);
+                if (h.startsWith('t=')) { try { textarea.value = decodeURIComponent(h.substring(2)); analyzeText(); } catch (e) { } }
+            }
+
+            textarea.addEventListener('input', () => { updateCharCount(); clearTimeout(debounceTimer); debounceTimer = setTimeout(analyzeText, 250); });
+            textarea.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); analyzeText(); } });
+            analyzeBtn.addEventListener('click', analyzeText);
+            resetBtn.addEventListener('click', resetApp);
+            updateCharCount();
+        })();
+    </script>
+</body>
+</html>
