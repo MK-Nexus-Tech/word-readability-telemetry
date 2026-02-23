@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>Word Counter · instant clarity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Word Counter · Spectral Blade</title>
     <!-- Inter & JetBrains Mono · free fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* ---------- WORD COUNTER · PERFECT CIRCLE, FLUID, TOAST ---------- */
+        /* ---------- SPECTRAL BLADE DESIGN SYSTEM ---------- */
         * {
             margin: 0;
             padding: 0;
@@ -31,9 +31,23 @@
             --card-bg: rgba(3, 5, 8, 0.7);
             --border-glow: 1px solid rgba(0, 242, 255, 0.2);
             --border-accent: 1px solid rgba(112, 0, 255, 0.4);
-            --toast-bg: rgba(3,5,8,0.9);
-            --toast-border: var(--signal);
-            --focus-ring: 0 0 0 3px rgba(0, 242, 255, 0.4);
+            --toast-bg: rgba(3, 5, 8, 0.9);
+        }
+
+        /* Light theme — toggled via .light on root */
+        html.light {
+            --base: #f0f6ff;
+            --signal: #0066ff;
+            --accent: #9f4cff;
+            --text-primary: #0a1a2f;
+            --text-secondary: #2c3e5c;
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(0, 102, 255, 0.25);
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --scanline: rgba(0, 102, 255, 0.05);
+            --glow: 0 0 16px rgba(0, 102, 255, 0.25);
+            --glow-accent: 0 0 20px rgba(159, 76, 255, 0.3);
+            --toast-bg: rgba(240, 246, 255, 0.95);
         }
 
         body {
@@ -46,39 +60,8 @@
             color: var(--text-primary);
             line-height: 1.5;
             min-height: 100vh;
-            padding: clamp(16px, 5vw, 24px);
+            padding: 24px 20px;
             position: relative;
-        }
-
-        /* toast system — bottom centered, non‑blocking */
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: var(--toast-bg);
- backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--toast-border);
-            border-radius: 60px;
-            padding: 12px 28px;
-            color: white;
-            font-weight: 500;
-            font-family: 'JetBrains Mono', monospace;
-            box-shadow: 0 0 24px var(--signal), 0 4px 12px rgba(0,0,0,0.5);
-            opacity: 0;
-            transition: opacity 0.2s ease, transform 0.2s ease;
-            pointer-events: none;
-            z-index: 10000;
-            white-space: nowrap;
-            max-width: 90vw;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-            pointer-events: none;
         }
 
         .glass-panel {
@@ -96,7 +79,7 @@
             margin: 0 auto;
         }
 
-        /* header with perfect circle logo (mobile proof) */
+        /* header with logo & dev info */
         .header-row {
             display: flex;
             flex-wrap: wrap;
@@ -109,46 +92,38 @@
         .brand-block {
             display: flex;
             align-items: center;
-            gap: clamp(12px, 4vw, 20px);
+            gap: 20px;
             flex-wrap: wrap;
         }
 
-        /* ---------- PERFECT CIRCLE FIX (mobile & desktop) ---------- */
         .logo-circle {
             width: 64px;
-            aspect-ratio: 1 / 1;         /* guarantees square ratio */
-            border-radius: 50%;           /* makes perfect circle */
+            height: 64px;
+            border-radius: 50%;
             background: var(--card-bg);
             border: 2px solid var(--signal);
             box-shadow: var(--glow), 0 0 0 2px rgba(112, 0, 255, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;              /* crop anything outside */
-            padding: 0;                    /* no extra padding – image fills */
+            overflow: hidden;
+            padding: 4px;
+            flex-shrink: 0;
         }
 
         .logo-circle img {
             width: 100%;
             height: 100%;
-            object-fit: cover;             /* cover + centering + no stretch */
+            object-fit: contain;
             display: block;
-            border-radius: 50%;             /* extra safety */
-        }
-
-        /* responsive scaling: on very small screens, keep size but don't shrink too much */
-        @media (max-width: 480px) {
-            .logo-circle {
-                width: 56px;               /* still perfect circle (aspect-ratio) */
-            }
+            border-radius: 50%;
         }
 
         .title-glow h1 {
             font-weight: 600;
-            font-size: clamp(1.8rem, 6vw, 2.5rem);
+            font-size: 2rem;
             letter-spacing: -0.02em;
             background: linear-gradient(135deg, #fff 0%, var(--signal) 80%);
-            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 0 12px var(--signal);
@@ -184,7 +159,7 @@
             letter-spacing: 0.3px;
             box-shadow: 0 0 20px rgba(112, 0, 255, 0.3);
             transition: all 0.2s;
-            min-height: 44px;              /* touch target */
+            min-height: 44px;
         }
 
         .linkedin-cta:hover {
@@ -194,9 +169,10 @@
             transform: scale(1.02);
         }
 
-        .linkedin-cta:focus-visible {
-            outline: 2px solid var(--signal);
-            outline-offset: 2px;
+        .linkedin-cta svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
         }
 
         .copyright {
@@ -212,10 +188,10 @@
             font-weight: 600;
         }
 
-        /* main grid: auto-fit + minmax = fully fluid */
+        /* main tool grid — FULLY FLUID */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
             gap: 24px;
             margin-bottom: 48px;
         }
@@ -232,7 +208,7 @@
 
         textarea {
             width: 100%;
-            min-height: 280px;
+            min-height: 220px;
             background: rgba(0, 242, 255, 0.02);
             border: var(--border-glow);
             border-radius: 28px;
@@ -246,27 +222,16 @@
             box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,242,255,0.1);
         }
 
-        textarea:focus-visible {
-            outline: none;
-            border-color: var(--signal);
-            box-shadow: 0 0 0 3px rgba(0, 242, 255, 0.2), inset 0 0 20px rgba(0,242,255,0.1), var(--focus-ring);
+        @media (min-width: 768px) {
+            textarea {
+                min-height: 320px;
+            }
         }
 
-        /* live word badge near textarea */
-        .live-word-badge {
-            position: absolute;
-            bottom: 16px;
-            left: 24px;
-            background: rgba(3,5,8,0.8);
-            backdrop-filter: blur(6px);
-            border: 1px solid var(--signal);
-            border-radius: 40px;
-            padding: 4px 18px;
-            font-size: 0.85rem;
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--signal);
-            box-shadow: var(--glow);
-            transition: all 0.2s ease;
+        textarea:focus {
+            outline: none;
+            border-color: var(--signal);
+            box-shadow: 0 0 0 3px rgba(0, 242, 255, 0.2), inset 0 0 20px rgba(0,242,255,0.1);
         }
 
         .char-float {
@@ -284,18 +249,19 @@
             box-shadow: var(--glow);
         }
 
-        /* action row – buttons stack on mobile */
         .action-row {
             display: flex;
             gap: 16px;
-            flex-wrap: wrap;
         }
-        .action-row .btn {
-            flex: 1 1 160px;              /* allow wrap, min width */
-            min-width: 160px;
+
+        @media (max-width: 480px) {
+            .action-row {
+                flex-direction: column;
+            }
         }
 
         .btn {
+            flex: 1 1 auto;
             background: rgba(112, 0, 255, 0.2);
             border: var(--border-accent);
             color: white;
@@ -309,7 +275,7 @@
             transition: 0.15s;
             box-shadow: 0 0 12px rgba(112,0,255,0.2);
             letter-spacing: 0.5px;
-            min-height: 52px;               /* touch friendly */
+            min-height: 52px;
         }
 
         .btn-primary {
@@ -330,15 +296,10 @@
             box-shadow: 0 0 24px var(--accent);
         }
 
-        .btn:focus-visible {
-            outline: 2px solid var(--signal);
-            outline-offset: 2px;
-        }
-
-        /* metrics grid – auto-fit, touch friendly */
+        /* responsive metrics grid */
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 16px;
             margin-bottom: 20px;
         }
@@ -347,69 +308,32 @@
             background: rgba(3,5,8,0.5);
             border: var(--border-glow);
             border-radius: 24px;
-            padding: 18px 8px;
+            padding: 18px 12px;
             backdrop-filter: blur(4px);
             box-shadow: inset 0 0 15px rgba(0,242,255,0.05);
-            transition: opacity 0.2s ease, transform 0.2s ease; /* smooth fade */
+            text-align: center;
+            min-width: 0;
+            word-break: break-word;
         }
 
         .metric-value {
             font-family: 'JetBrains Mono', monospace;
-            font-size: clamp(1.6rem, 5vw, 2.1rem);
+            font-size: clamp(1.6rem, 7vw, 2.1rem);
             font-weight: 600;
             color: var(--signal);
             line-height: 1.2;
             text-shadow: 0 0 8px var(--signal);
-            word-break: break-word;
         }
 
         .metric-label {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             color: var(--text-secondary);
-        }
-
-        /* details heading (accessibility) */
-        .details-heading {
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            color: var(--signal);
-            border-left: 4px solid var(--signal);
-            padding-left: 16px;
-        }
-
-        /* keyword highlight card (most frequent) */
-        .top-keyword-card {
-            background: rgba(112,0,255,0.15);
-            border: 1px solid var(--accent);
-            border-radius: 40px;
-            padding: 10px 18px;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-family: 'JetBrains Mono', monospace;
-            box-shadow: 0 0 16px var(--accent);
-        }
-        .top-keyword-label {
-            color: var(--signal);
-            font-size: 0.85rem;
-        }
-        .top-keyword-value {
-            font-weight: 700;
-            font-size: 1.3rem;
-            color: white;
-            background: var(--accent);
-            padding: 4px 16px;
-            border-radius: 40px;
         }
 
         .table-container {
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
         }
 
         table {
@@ -432,9 +356,10 @@
             border-bottom: 1px solid rgba(0,242,255,0.1);
         }
 
+        /* responsive share grid + touch friendly */
         .share-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 12px;
             margin-top: 8px;
         }
@@ -442,8 +367,8 @@
             background: rgba(0,242,255,0.04);
             border: 1px solid var(--glass-border);
             border-radius: 40px;
-            padding: 12px 6px;          /* 44px min height */
-            font-size: 0.85rem;
+            padding: 10px 6px;
+            font-size: 0.8rem;
             font-family: 'JetBrains Mono', monospace;
             color: var(--text-secondary);
             cursor: pointer;
@@ -453,79 +378,108 @@
             justify-content: center;
             gap: 6px;
             min-height: 44px;
+            word-break: keep-all;
         }
         .share-btn:hover {
             border-color: var(--signal);
             color: var(--signal);
             box-shadow: 0 0 12px var(--signal);
         }
-        .share-btn:focus-visible {
-            outline: 2px solid var(--signal);
-        }
 
-        /* theme toggle fixed — but avoid overlap with toast */
+        /* theme toggle fixed — safe area aware */
         .theme-toggle-fab {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
+            bottom: calc(20px + env(safe-area-inset-bottom));
+            right: 20px;
             z-index: 999;
             background: rgba(0,242,255,0.1);
             border: 1px solid var(--signal);
             border-radius: 50px;
-            padding: 12px 22px;
+            padding: 10px 20px;
             color: white;
             backdrop-filter: blur(6px);
             cursor: pointer;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             transition: 0.2s;
             box-shadow: var(--glow);
-            min-height: 52px;
-            min-width: 52px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            min-height: 48px;
+            min-width: 48px;
         }
         .theme-toggle-fab:hover {
             background: var(--signal);
             color: var(--base);
         }
-        .theme-toggle-fab:focus-visible {
-            outline: 2px solid white;
+        @media (max-width: 480px) {
+            .theme-toggle-fab {
+                right: 12px;
+                padding: 8px 14px;
+            }
         }
 
-        /* high contrast text safety */
-        .high-contrast-meta {
+        /* toast notification (non‑blocking) */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--toast-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--signal);
+            border-radius: 60px;
+            padding: 12px 28px;
             color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            box-shadow: var(--glow), 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            pointer-events: none;
+            white-space: nowrap;
+            max-width: 90vw;
+            white-space: normal;
+            word-break: break-word;
+            text-align: center;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: none;
         }
 
-        /* large text protection: cap analysis for huge texts */
-        .oversize-warning {
-            color: #ffaa00;
-            font-size: 0.8rem;
+        /* accessibility: focus outline */
+        button:focus-visible {
+            outline: 2px solid var(--signal);
+            outline-offset: 2px;
+        }
+
+        /* hint text */
+        .hint-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
             margin-top: 4px;
+            letter-spacing: 0.3px;
         }
-
-        /* no horizontal scroll */
-        img, svg, table, .container { max-width: 100%; }
     </style>
 </head>
 <body>
-    <div id="toastMessage" class="toast" role="status" aria-live="polite"></div>
     <div class="container">
-        <!-- header with logo (perfect circle on mobile) and renamed title -->
+        <!-- header with logo, developer, CTA, copyright -->
         <div class="header-row">
             <div class="brand-block">
-                <!-- logo circle – FIXED: aspect-ratio + cover -->
                 <div class="logo-circle">
-                    <img src="public/logo.webp" alt="Word Counter logo" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2245%22%20fill%3D%22%2300f2ff%22%20%2F%3E%3Ctext%20x%3D%2222%22%20y%3D%2270%22%20font-size%3D%2248%22%20fill%3D%22%23030508%22%3EWC%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                    <img src="public/logo.webp" alt="Word Counter logo" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2245%22%20fill%3D%22%2300f2ff%22%20%2F%3E%3Ctext%20x%3D%2220%22%20y%3D%2268%22%20font-size%3D%2248%22%20fill%3D%22%23030508%22%3EW%3C%2Ftext%3E%3C%2Fsvg%3E');">
                 </div>
                 <div class="title-glow">
-                    <h1>Word Counter</h1>   <!-- renamed for clarity -->
+                    <h1>WORD COUNTER</h1>
+                    <p>spectral telemetry · readability</p>
                 </div>
             </div>
             <div class="developer-area">
                 <a href="https://www.linkedin.com/in/muhammad-mk-nexus" target="_blank" class="linkedin-cta" aria-label="LinkedIn profile Muhammad MK Nexus">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                     <span>Muhammad MK Nexus</span>
                 </a>
                 <div class="copyright">
@@ -535,72 +489,66 @@
             </div>
         </div>
 
-        <!-- MAIN TOOL (all calculations intact) -->
+        <!-- MAIN TOOL -->
         <div class="dashboard-grid">
-            <!-- left: input + badge -->
+            <!-- left: input -->
             <div class="input-panel glass-panel">
                 <div class="textarea-wrap">
-                    <textarea id="text-input" placeholder="// paste or type your text" aria-label="Text to analyze"></textarea>
-                    <div id="live-word-badge" class="live-word-badge">0 words</div>
+                    <textarea id="text-input" placeholder="// paste or type your text" aria-label="Text input for analysis"></textarea>
                     <div id="char-count" class="char-float">0 characters</div>
                 </div>
                 <div class="action-row">
-                    <button id="analyze-btn" class="btn btn-primary" aria-label="Analyze text">▶ ANALYZE</button>
-                    <button id="reset-btn" class="btn btn-secondary" aria-label="Reset all">✕ RESET</button>
+                    <button id="analyze-btn" class="btn btn-primary">▶ ANALYZE</button>
+                    <button id="reset-btn" class="btn btn-secondary">✕ RESET</button>
                 </div>
             </div>
 
-            <!-- right: metrics & keyword density (exact required list) -->
+            <!-- right: metrics & sharing -->
             <div class="glass-panel" style="display: flex; flex-direction: column; gap: 1rem;">
-                <!-- visible details heading -->
-                <h2 class="details-heading" id="details-heading">📊 details</h2>
-
-                <!-- aria-live region for metrics updates -->
-                <div class="metrics-grid" id="details-container" aria-live="polite" aria-labelledby="details-heading">
+                <div class="metrics-grid" id="details-container" aria-live="polite">
                     <div class="metric-tile"><span id="words" class="metric-value">—</span><div class="metric-label">WORDS</div></div>
-                    <div class="metric-tile"><span id="characters" class="metric-value">—</span><div class="metric-label">CHARACTERS</div></div>
+                    <div class="metric-tile"><span id="characters" class="metric-value">—</span><div class="metric-label">CHARS</div></div>
                     <div class="metric-tile"><span id="sentences" class="metric-value">—</span><div class="metric-label">SENTENCES</div></div>
                     <div class="metric-tile"><span id="paragraphs" class="metric-value">—</span><div class="metric-label">PARAGRAPHS</div></div>
                     <div class="metric-tile"><span id="grade-level" class="metric-value">—</span><div class="metric-label">READING LEVEL</div></div>
                     <div class="metric-tile"><span id="reading-time" class="metric-value">—</span><div class="metric-label">READ (sec)</div></div>
                     <div class="metric-tile"><span id="speaking-time" class="metric-value">—</span><div class="metric-label">SPEAK (sec)</div></div>
-                    <div class="metric-tile"><span class="metric-value" style="font-size:1.6rem;">✨</span><div class="metric-label">LIVE</div></div>
+                    <div class="metric-tile"><span class="metric-value" style="font-size:1.4rem;">✨</span><div class="metric-label">LIVE</div></div>
                 </div>
 
-                <!-- top keyword highlight card (most repeated) -->
-                <div id="topKeywordCard" class="top-keyword-card" style="display: none;">
-                    <span class="top-keyword-label">🔥 top keyword</span>
-                    <span id="topKeywordValue" class="top-keyword-value">—</span>
-                </div>
+                <!-- hint text: case‑insensitive, word boundaries -->
+                <div class="hint-text">⚡ case‑insensitive, word boundaries</div>
 
-                <!-- keyword density table (exact required list) -->
                 <div class="table-container">
                     <table>
-                        <caption style="caption-side: bottom; font-size:0.8rem;">case‑insensitive, word boundaries</caption>
-                        <thead><tr><th scope="col">keyword</th><th scope="col">count</th><th scope="col">%</th></tr></thead>
+                        <thead><tr><th>keyword</th><th>count</th><th>%</th></tr></thead>
                         <tbody id="keyword-table-body"></tbody>
                     </table>
                 </div>
 
-                <!-- share / copy row -->
                 <div class="share-grid">
-                    <button id="copy-link" class="share-btn" aria-label="Copy shareable link">🔗 LINK</button>
-                    <button id="copy-results" class="share-btn" aria-label="Copy results as text">📋 RESULTS</button>
+                    <button id="copy-link" class="share-btn" aria-label="Copy sharable link">🔗 LINK</button>
+                    <button id="copy-results" class="share-btn" aria-label="Copy results to clipboard">📋 RESULTS</button>
+                    <button id="share-twitter" class="share-btn" aria-label="Share on X (Twitter)">𝕏 TW</button>
+                    <button id="share-facebook" class="share-btn" aria-label="Share on Facebook">fb</button>
                     <button id="share-linkedin" class="share-btn" aria-label="Share on LinkedIn">IN</button>
+                    <button id="share-whatsapp" class="share-btn" aria-label="Share on WhatsApp">WA</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- floating theme toggle -->
-    <button class="theme-toggle-fab" id="themeToggle" aria-label="Toggle theme">🌙</button>
+    <!-- theme toggle (floating) -->
+    <button class="theme-toggle-fab" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+
+    <!-- toast container -->
+    <div id="toast" class="toast"></div>
 
     <script>
         (function() {
-            // ---------- WORD COUNTER · ALL CALCULATIONS PRESERVED + NEW KEYWORD SET + TOAST ----------
+            // DOM elements
             const textarea = document.getElementById('text-input');
             const charSpan = document.getElementById('char-count');
-            const liveWordBadge = document.getElementById('live-word-badge');
             const analyzeBtn = document.getElementById('analyze-btn');
             const resetBtn = document.getElementById('reset-btn');
 
@@ -612,177 +560,244 @@
             const readingTimeEl = document.getElementById('reading-time');
             const speakingTimeEl = document.getElementById('speaking-time');
             const keywordBody = document.getElementById('keyword-table-body');
-            const topKeywordCard = document.getElementById('topKeywordCard');
-            const topKeywordValue = document.getElementById('topKeywordValue');
 
             const copyLinkBtn = document.getElementById('copy-link');
             const copyResultsBtn = document.getElementById('copy-results');
+            const twitterBtn = document.getElementById('share-twitter');
+            const facebookBtn = document.getElementById('share-facebook');
             const linkedinBtn = document.getElementById('share-linkedin');
+            const whatsappBtn = document.getElementById('share-whatsapp');
             const themeToggle = document.getElementById('themeToggle');
 
-            // *** UPDATED KEYWORD LIST (exactly as required) ***
-            const KEYWORDS = ['word', 'words', 'wordcounter', 'help', 'count', 'text', 'keywords', 'characters', 'online', 'editor'];
-            const READING_SPEED = 200; const SPEAKING_SPEED = 130;
+            // Toast
+            const toastEl = document.getElementById('toast');
+            function showToast(msg) {
+                toastEl.textContent = msg;
+                toastEl.classList.add('show');
+                setTimeout(() => {
+                    toastEl.classList.remove('show');
+                }, 2000);
+            }
 
-            // large text protection threshold (20k words)
-            const SAFE_WORD_LIMIT = 20000;
+            // ===== EXACT KEYWORDS AS REQUESTED =====
+            const KEYWORDS = [
+                'word', 'words', 'wordcounter', 'help', 
+                'count', 'text', 'keywords', 'characters', 
+                'online', 'editor'
+            ];
+
+            // Precompiled regex (word boundaries, case-insensitive)
+            const KEYWORD_REGEX = KEYWORDS.map(k => ({
+                key: k,
+                regex: new RegExp(`\\b${k}\\b`, 'gi')
+            }));
+
+            // Constants
+            const READING_SPEED = 200; // words per minute
+            const SPEAKING_SPEED = 130; // words per minute
 
             let debounceTimer;
-            let darkMode = false;
 
-            // ---------- TOAST (replaces alert) ----------
-            function showToast(message, duration = 2000) {
-                const toast = document.getElementById('toastMessage');
-                toast.textContent = message;
-                toast.classList.add('show');
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, duration);
-            }
-
-            // Theme toggle
+            // Theme toggle: class-based
             themeToggle.addEventListener('click', () => {
                 const root = document.documentElement;
-                if (!darkMode) {
-                    root.style.setProperty('--base', '#1a1d2b');
-                    root.style.setProperty('--signal', '#ffb86b');
-                    root.style.setProperty('--text-primary', '#f8f8f2');
-                    themeToggle.textContent = '☀️';
-                } else {
-                    root.style.setProperty('--base', '#030508');
-                    root.style.setProperty('--signal', '#00f2ff');
-                    root.style.setProperty('--text-primary', '#e0f0ff');
-                    themeToggle.textContent = '🌙';
-                }
-                darkMode = !darkMode;
+                root.classList.toggle('light');
+                const isLight = root.classList.contains('light');
+                themeToggle.textContent = isLight ? '🌙' : '☀️';
             });
 
-            // helper: update live word count badge
-            function updateLiveWordBadge() {
-                const w = countWords(textarea.value);
-                liveWordBadge.textContent = `${w} word${w !== 1 ? 's' : ''}`;
-            }
-
+            // Update character count display
             function updateCharCount() {
                 const c = textarea.value.length;
                 charSpan.textContent = `${c} character${c !== 1 ? 's' : ''}`;
-                updateLiveWordBadge();   // real‑time update
             }
 
-            function countWords(t) { let m = t.match(/[A-Za-z0-9'’-]+/g); return m ? m.length : 0; }
-            function countCharacters(t) { return t.length; }
-            function countSentences(t) { if (!t.trim()) return 0; let m = t.match(/[^.!?]+[.!?]+(\s|$)/g); return m ? m.length : (t.trim() ? 1 : 0); }
-            function countParagraphs(t) { if (!t.trim()) return 0; let p = t.split(/\n\s*\n/); return p.filter(pa => pa.trim().length > 0).length; }
+            // Text analysis functions
+            function countWords(t) { 
+                let m = t.match(/[A-Za-z0-9'’-]+/g); 
+                return m ? m.length : 0; 
+            }
+            
+            function countCharacters(t) { 
+                return t.length; 
+            }
+            
+            function countSentences(t) { 
+                if (!t.trim()) return 0; 
+                let m = t.match(/[^.!?]+[.!?]+(\s|$)/g); 
+                return m ? m.length : (t.trim() ? 1 : 0); 
+            }
+            
+            function countParagraphs(t) { 
+                if (!t.trim()) return 0; 
+                let p = t.split(/\n\s*\n/); 
+                return p.filter(pa => pa.trim().length > 0).length; 
+            }
+            
             function estimateSyllables(w) {
-                w = w.toLowerCase(); let vowel = w.match(/[aeiouy]+/g); if (!vowel) return 1; let c = vowel.length; if (w.endsWith('e') && !w.endsWith('le') && c > 1) c--; return Math.max(c, 1);
+                w = w.toLowerCase(); 
+                let vowel = w.match(/[aeiouy]+/g); 
+                if (!vowel) return 1; 
+                let c = vowel.length; 
+                if (w.endsWith('e') && !w.endsWith('le') && c > 1) c--; 
+                return Math.max(c, 1);
             }
-            function syllablesInText(t) { let words = t.match(/[A-Za-z'’-]+/g) || []; return words.reduce((acc, w) => acc + estimateSyllables(w), 0); }
-            function calculateGradeLevel(t, w, s) { if (w === 0 || s === 0) return null; let syl = syllablesInText(t); let grade = 0.39 * (w / s) + 11.8 * (syl / w) - 15.59; return Math.max(grade, 0); }
-            function calculateTime(w, speed) { return Math.ceil(w / (speed / 60)); }
-            function keywordDensity(t, totalWords) { 
-                let d = {}; 
-                let wordsArray = t.toLowerCase().match(/[A-Za-z0-9'’-]+/g) || []; 
-                KEYWORDS.forEach(k => { 
-                    let regex = new RegExp(`\\b${k}\\b`, 'gi'); 
-                    let m = t.match(regex); 
-                    d[k] = m ? m.length : 0; 
-                }); 
-                return d; 
+            
+            function syllablesInText(t) { 
+                let words = t.match(/[A-Za-z'’-]+/g) || []; 
+                return words.reduce((acc, w) => acc + estimateSyllables(w), 0); 
+            }
+            
+            function calculateGradeLevel(t, w, s) { 
+                if (w === 0 || s === 0) return null; 
+                let syl = syllablesInText(t); 
+                let grade = 0.39 * (w / s) + 11.8 * (syl / w) - 15.59; 
+                return Math.max(grade, 0); 
+            }
+            
+            function calculateTime(w, speed) { 
+                return Math.ceil(w / (speed / 60)); 
             }
 
+            // Keyword density using precompiled regex
+            function keywordDensity(t) {
+                let d = {};
+                KEYWORD_REGEX.forEach(item => {
+                    let matches = t.match(item.regex);
+                    d[item.key] = matches ? matches.length : 0;
+                });
+                return d;
+            }
+
+            // Reset all result displays
             function resetResults() {
-                wordsEl.textContent = charactersEl.textContent = sentencesEl.textContent = paragraphsEl.textContent = gradeLevelEl.textContent = readingTimeEl.textContent = speakingTimeEl.textContent = '—';
+                wordsEl.textContent = '—';
+                charactersEl.textContent = '—';
+                sentencesEl.textContent = '—';
+                paragraphsEl.textContent = '—';
+                gradeLevelEl.textContent = '—';
+                readingTimeEl.textContent = '—';
+                speakingTimeEl.textContent = '—';
                 keywordBody.innerHTML = '';
-                topKeywordCard.style.display = 'none';
-                liveWordBadge.textContent = '0 words';
             }
 
+            // Main analysis function
             function analyzeText() {
                 let text = textarea.value;
-                if (!text.trim()) { resetResults(); updateCharCount(); return; }
-
-                // large text protection: if words > 20000, warn but still compute (no freeze)
-                let words = countWords(text);
-                if (words > SAFE_WORD_LIMIT) {
-                    showToast(`⚠️ Large text (${words} words) — processing may be slower`, 2500);
+                if (!text.trim()) { 
+                    resetResults(); 
+                    updateCharCount(); 
+                    return; 
                 }
-
-                let chars = countCharacters(text), sentences = countSentences(text), paras = countParagraphs(text);
+                
+                let words = countWords(text);
+                let chars = countCharacters(text);
+                let sentences = countSentences(text);
+                let paras = countParagraphs(text);
                 let grade = calculateGradeLevel(text, words, sentences);
-                let readTime = calculateTime(words, READING_SPEED), speakTime = calculateTime(words, SPEAKING_SPEED);
-                let density = keywordDensity(text, words);
+                let readTime = calculateTime(words, READING_SPEED);
+                let speakTime = calculateTime(words, SPEAKING_SPEED);
+                let density = keywordDensity(text);
 
-                // update metrics with smooth fade (via css)
-                wordsEl.textContent = words; charactersEl.textContent = chars; sentencesEl.textContent = sentences; paragraphsEl.textContent = paras;
-                gradeLevelEl.textContent = grade !== null ? grade.toFixed(1) : 'N/A';
-                readingTimeEl.textContent = readTime; speakingTimeEl.textContent = speakTime;
+                // Update metrics
+                wordsEl.textContent = words;
+                charactersEl.textContent = chars;
+                sentencesEl.textContent = sentences;
+                paragraphsEl.textContent = paras;
+                gradeLevelEl.textContent = grade !== null ? grade.toFixed(1) : '—';
+                readingTimeEl.textContent = readTime;
+                speakingTimeEl.textContent = speakTime;
 
-                // build keyword table (sorted by highest frequency)
-                let sorted = KEYWORDS.map(k => ({ keyword: k, count: density[k] || 0 })).sort((a,b) => b.count - a.count);
+                // Build keyword table - EXACT ORDER AS REQUESTED
                 keywordBody.innerHTML = '';
-                sorted.forEach(item => {
-                    let cnt = item.count;
-                    let perc = words > 0 ? ((cnt / words) * 100).toFixed(1) : '0.0';
+                KEYWORDS.forEach(k => {
+                    let cnt = density[k] || 0;
+                    let perc = words > 0 ? (cnt / words * 100).toFixed(1) : '0.0';
                     let row = document.createElement('tr');
-                    row.innerHTML = `<td>${item.keyword}</td><td>${cnt}</td><td>${perc}%</td>`;
+                    row.innerHTML = `<td>${k}</td><td>${cnt}</td><td>${perc}%</td>`;
                     keywordBody.appendChild(row);
                 });
-
-                // top keyword highlight
-                if (sorted.length && sorted[0].count > 0) {
-                    topKeywordValue.textContent = `${sorted[0].keyword} (${sorted[0].count})`;
-                    topKeywordCard.style.display = 'flex';
-                } else {
-                    topKeywordCard.style.display = 'none';
-                }
             }
 
+            // Reset app
             function resetApp() { 
                 textarea.value = ''; 
                 resetResults(); 
                 updateCharCount(); 
                 window.location.hash = ''; 
-                showToast('Reset done');
             }
 
-            function getEncodedUrl() { let t = textarea.value; if (!t) return null; return `${window.location.origin}${window.location.pathname}#t=${encodeURIComponent(t)}`; }
+            // URL sharing
+            function getEncodedUrl() { 
+                let t = textarea.value; 
+                if (!t) return null; 
+                return `${window.location.origin}${window.location.pathname}#t=${encodeURIComponent(t)}`; 
+            }
             
+            // Event listeners
             copyLinkBtn.addEventListener('click', () => { 
                 let url = getEncodedUrl(); 
-                if (url) navigator.clipboard.writeText(url).then(() => showToast('🔗 Link copied')); 
-                else showToast('no text to share');
+                if (url) navigator.clipboard.writeText(url).then(() => showToast('Link copied')); 
+                else showToast('No text to share');
             });
             
             copyResultsBtn.addEventListener('click', () => {
-                let t = textarea.value; if (!t) return showToast('Nothing to copy'); 
-                let w = countWords(t), ch = countCharacters(t), sen = countSentences(t), para = countParagraphs(t), 
-                    grade = calculateGradeLevel(t, w, sen), rd = calculateTime(w, READING_SPEED), sp = calculateTime(w, SPEAKING_SPEED); 
-                let dens = keywordDensity(t, w); 
-                let str = `WORD COUNTER\nwords:${w}\nchars:${ch}\nsentences:${sen}\nparagraphs:${para}\ngrade:${grade ? grade.toFixed(1) : 'N/A'}\nread:${rd}s\nspeak:${sp}s\n\nkeywords:\n`; 
-                KEYWORDS.forEach(k => { str += `${k}:${dens[k] || 0} (${w > 0 ? ((dens[k] / w) * 100).toFixed(1) : 0}%)\n`; }); 
-                navigator.clipboard.writeText(str).then(() => showToast('📋 Results copied'));
+                let t = textarea.value; 
+                if (!t) { showToast('No text'); return; }
+                
+                let w = countWords(t);
+                let ch = countCharacters(t);
+                let sen = countSentences(t);
+                let para = countParagraphs(t);
+                let grade = calculateGradeLevel(t, w, sen);
+                let rd = calculateTime(w, READING_SPEED);
+                let sp = calculateTime(w, SPEAKING_SPEED);
+                let dens = keywordDensity(t);
+                
+                let str = `WORD ANALYSIS\nwords:${w}\nchars:${ch}\nsentences:${sen}\nparagraphs:${para}\ngrade:${grade ? grade.toFixed(1) : 'N/A'}\nread:${rd}s\nspeak:${sp}s\n\nkeywords:\n`; 
+                KEYWORDS.forEach(k => { 
+                    str += `${k}:${dens[k] || 0} (${w > 0 ? ((dens[k] / w) * 100).toFixed(1) : 0}%)\n`; 
+                }); 
+                navigator.clipboard.writeText(str).then(() => showToast('Results copied'));
             });
             
+            twitterBtn.addEventListener('click', () => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent('Word Counter analysis')}&url=${encodeURIComponent(window.location.href)}`));
+            facebookBtn.addEventListener('click', () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`));
             linkedinBtn.addEventListener('click', () => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`));
+            whatsappBtn.addEventListener('click', () => window.open(`https://wa.me/?text=${encodeURIComponent('Check word analysis: ' + window.location.href)}`));
 
             // Load from URL hash if present
             if (window.location.hash) {
                 let h = window.location.hash.substring(1);
-                if (h.startsWith('t=')) { try { textarea.value = decodeURIComponent(h.substring(2)); analyzeText(); } catch (e) { } }
+                if (h.startsWith('t=')) { 
+                    try { 
+                        textarea.value = decodeURIComponent(h.substring(2)); 
+                        analyzeText(); 
+                    } catch (e) { 
+                        // ignore
+                    }
+                }
             }
 
-            // input events
+            // Input events
             textarea.addEventListener('input', () => { 
                 updateCharCount(); 
                 clearTimeout(debounceTimer); 
-                debounceTimer = setTimeout(() => {
-                    analyzeText();
-                }, 280); 
+                debounceTimer = setTimeout(analyzeText, 250); 
             });
-            textarea.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); analyzeText(); } });
+            
+            textarea.addEventListener('keydown', (e) => { 
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { 
+                    e.preventDefault(); 
+                    analyzeText(); 
+                } 
+            });
+            
             analyzeBtn.addEventListener('click', analyzeText);
             resetBtn.addEventListener('click', resetApp);
-            updateCharCount();   // initial
+            
+            // Initial update
+            updateCharCount();
         })();
     </script>
 </body>
